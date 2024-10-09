@@ -28,7 +28,7 @@ jobs:
     
       - name: Install Qt with AQT
         run: |
-          python3 -m aqt install-qt 6.2.0 linux desktop -m qtbase,qttools -O /home/runner/work/org/Qt
+          python3 -m aqt install-qt linux desktop 6.2.0 -m qtbase,qttools -O /home/runner/work/org/Qt
 
       - name: Configure CMake
         run: |
