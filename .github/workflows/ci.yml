@@ -1,5 +1,6 @@
 name: CI for Org File Manager
 
+# Trigger the workflow on push or pull request to the main branch
 on:
   push:
     branches:
@@ -8,30 +9,44 @@ on:
     branches:
       - main
 
+# Define jobs
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Set up Qt environment
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '6.7.2' 
-          modules: qtbase,qttools 
+          version: '6.3.0' # Adjust this to the Qt version you're using
+          modules: qtbase,qttools # Include other modules if necessary
 
-      - name: Install build tools
+      # Step 3: Install build tools
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential qt5-qmake qtbase5-dev
+          sudo apt-get install -y build-essential cmake
 
-      - name: Build with qmake
+      # Step 4: Configure the build
+      - name: Configure CMake
         run: |
-          qmake
-          make
+          mkdir -p build
+          cd build
+          cmake .. # Add additional flags if necessary
 
+      # Step 5: Build the project
+      - name: Build
+        run: |
+          cd build
+          cmake --build .
+
+      # Step 6: Run tests (optional)
       - name: Run Tests
         run: |
-          make check
+          cd build
+          ctest
