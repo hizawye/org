@@ -1,4 +1,4 @@
-# org File Manager
+# Org File Manager
 
 **org** is a lightweight, fast, and user-friendly file manager built with C++ and Qt. Designed with simplicity in mind, it provides a clean interface to navigate and manage your filesystem efficiently.
 
