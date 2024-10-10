@@ -1,4 +1,4 @@
-name: CI for Org File Manager
+name: Qt CI
 
 on:
   push:
@@ -13,17 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt upgrade
-          sudo apt install qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-base-dev-tools build-essential g++ qt6-webengine-dev libqt6network6 git
+    - name: Install dependencies and Qt 6
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential g++ wget
 
-      - name: Build
-        run: |
-          qmake -qt=qt6
-          make -j$(nproc)
-      
+        # Download and install Qt 6 from the online installer
+        wget https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_600/qt.qt6.600.gcc_64/6.0.0-0-202012091434qt6-tools-linux-6.0.0.run
+        chmod +x qt6-tools-linux-6.0.0.run
+        ./qt6-tools-linux-6.0.0.run --script qt-installer-noninteractive.qs
+        
+        # Set the Qt path to ensure qmake is found
+        export PATH=/opt/Qt/6.0.0/gcc_64/bin:$PATH
+
+    - name: Build project
+      run: |
+        qmake
+        make -j$(nproc)
+
+    - name: Run tests (optional)
+      run: |
+        ./your_executable_name --test
